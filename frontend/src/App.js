@@ -17,14 +17,14 @@ import AuthenticationPage, {
   action as authAction,
 } from "./pages/Authentication";
 import { action as logoutAction } from "./pages/Logout";
-import {tokenLoader} from './util/auth';
+import { checkAuthLoader, tokenLoader } from "./util/auth";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     errorElement: <ErrorPage />,
-    id: 'root',
+    id: "root",
     // loader użyty tutaj aby był wszędzie dostęp do informacji, czy użytkownik jest zalogowany (realod następuje za każdym razem kiedy używana jest nawigacja)
     loader: tokenLoader,
     children: [
@@ -52,6 +52,8 @@ const router = createBrowserRouter([
                 path: "edit",
                 element: <EditEventPage />,
                 action: manipulateEventAction,
+                // ten loader zapobiega dostaniu się do formularza (edycji) jeśli nie jesteśmy zalogowani tj. nie ma tokena (po ręcznym wpisaniu url)
+                loader: checkAuthLoader,
               },
             ],
           },
@@ -59,6 +61,8 @@ const router = createBrowserRouter([
             path: "new",
             element: <NewEventPage />,
             action: manipulateEventAction,
+            // ten loader zapobiega dostaniu się do formularza (add new) jeśli nie jesteśmy zalogowani tj. nie ma tokena (po ręcznym wpisaniu url)
+            loader: checkAuthLoader,
           },
         ],
       },
